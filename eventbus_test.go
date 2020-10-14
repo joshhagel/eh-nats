@@ -16,8 +16,9 @@ package nats
 import (
 	"os"
 	"testing"
+	"time"
 
-	eh "github.com/looplab/eventhorizon"
+	"github.com/google/uuid"
 	"github.com/looplab/eventhorizon/eventbus"
 	nats "github.com/nats-io/nats.go"
 	stan "github.com/nats-io/stan.go"
@@ -38,10 +39,10 @@ func TestEventBus(t *testing.T) {
 	}
 
 	if clientId == "" {
-		clientId = eh.NewUUID().String()
+		clientId = uuid.New().String()
 	}
 
-	topic := eh.NewUUID().String()
+	topic := uuid.New().String()
 
 	nc, err := nats.Connect(natsUrl,
 		nats.ErrorHandler(func(_ *nats.Conn, _ *nats.Subscription, err error) {
@@ -68,6 +69,6 @@ func TestEventBus(t *testing.T) {
 		t.Error(err)
 	}
 
-	eventbus.AcceptanceTest(t, bus1, bus2)
+	eventbus.AcceptanceTest(t, bus1, bus2, 1*time.Second)
 
 }
